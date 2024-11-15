@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IP Information</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            padding: 20px;
+        }
+        #data {
+            margin-top: 20px;
+            font-size: 1.2em;
+            text-align: left;
+            display: inline-block;
+        }
+        table {
+            border-collapse: collapse;
+            margin: 20px auto;
+            width: 80%;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+        }
+        th {
+            background-color: #f4f4f4;
+            text-align: left;
+        }
+    </style>
+</head>
+<body>
+    <h1>IP Information Viewer</h1>
+    <button onclick="fetchIPInfo()">Get IP Info</button>
+    <div id="data">Click the button to load data</div>
+
+    <script>
+        async function fetchIPInfo() {
+            const url = "https://ipinfo.io/27.145.21.252/json?token=17064f8531fdb3";
+            const dataDiv = document.getElementById("data");
+
+            try {
+                dataDiv.textContent = "Loading...";
+                const response = await fetch(url);
+                const data = await response.json();
+
+                // แสดงผลข้อมูลในตาราง
+                const fields = [
+                    { key: "ip", label: "IP Address" },
+                    { key: "hostname", label: "Hostname" },
+                    { key: "city", label: "City" },
+                    { key: "region", label: "Region" },
+                    { key: "country", label: "Country" },
+                    { key: "loc", label: "Location" },
+                    { key: "org", label: "Organization" },
+                    { key: "timezone", label: "Timezone" }
+                ];
+
+                let table = "<table><tr><th>Field</th><th>Value</th></tr>";
+                fields.forEach(field => {
+                    table += `<tr><td>${field.label}</td><td>${data[field.key] || "N/A"}</td></tr>`;
+                });
+                table += "</table>";
+
+                dataDiv.innerHTML = table;
+            } catch (error) {
+                dataDiv.textContent = "Error fetching data. Please try again.";
+                console.error(error);
+            }
+        }
+    </script>
+</body>
+</html>
